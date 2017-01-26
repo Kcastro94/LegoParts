@@ -7,10 +7,10 @@ package com.kev.legoparts;
 public class LegoPiece {
     private long id;
     private String name;
-    private String image;
+    private int image;
     private int quantity;
 
-    public LegoPiece(long id, int quantity, String image, String name) {
+    public LegoPiece(long id, int quantity, int image, String name) {
         this.id = id;
         this.quantity = quantity;
         this.image = image;
@@ -33,11 +33,11 @@ public class LegoPiece {
         this.name = name;
     }
 
-    public String getImage() {
+    public int getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(int image) {
         this.image = image;
     }
 

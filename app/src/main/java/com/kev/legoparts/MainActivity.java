@@ -1,7 +1,14 @@
 package com.kev.legoparts;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Spinner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -9,5 +16,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final Spinner listPieces = (Spinner) findViewById(R.id.list);
+
+        Button btnSearch = (Button) findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<LegoPiece> piecesSet = new ArrayList<>();
+
+
+                PiecesAdapter adapter = new PiecesAdapter(MainActivity.this, piecesSet);
+                listPieces.setAdapter(adapter);
+            }
+        });
     }
 }
