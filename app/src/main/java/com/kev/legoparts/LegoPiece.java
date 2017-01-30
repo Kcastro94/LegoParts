@@ -5,24 +5,36 @@ package com.kev.legoparts;
  */
 
 public class LegoPiece {
-    private long id;
+    private long setId;
+    private long pieceId;
     private String name;
     private int image;
     private int quantity;
 
-    public LegoPiece(long id, int quantity, int image, String name) {
-        this.id = id;
-        this.quantity = quantity;
-        this.image = image;
+    public LegoPiece(){}
+
+    public LegoPiece(long setId, long pieceId, String name, int image, int quantity) {
+        this.setId = setId;
+        this.pieceId = pieceId;
         this.name = name;
+        this.image = image;
+        this.quantity = quantity;
     }
 
-    public long getId() {
-        return id;
+    public long getSetId() {
+        return setId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setSetId(long setId) {
+        this.setId = setId;
+    }
+
+    public long getPieceId() {
+        return pieceId;
+    }
+
+    public void setPieceId(long pieceId) {
+        this.pieceId = pieceId;
     }
 
     public String getName() {
@@ -49,22 +61,5 @@ public class LegoPiece {
         this.quantity = quantity;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
-        LegoPiece legoPiece = (LegoPiece) o;
-
-        if (id != legoPiece.id) return false;
-        return name != null ? name.equals(legoPiece.name) : legoPiece.name == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
-    }
 }

@@ -56,7 +56,8 @@ public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
         String setId = params[0];
 
         try{
-            URL url = new URL("https://rebrickable.com/api/get_set_parts/Pi2K3OzsDV/tsv/"+setId);
+            URL url = new URL("http://stucom.flx.cat/lego/get_set_parts.php?key="+setId);
+
             URLConnection connection = url.openConnection();
             connection.connect();
             int lengthOfFile = connection.getContentLength();
@@ -74,12 +75,14 @@ public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
             input.close();
             output.flush();
             String tsv = new String(output.toByteArray());
+            String[] aux = tsv.split("\n");
             for(int i = 0; i < tsv.length(); i++){
+
                 List<LegoPiece> piecesSet = new ArrayList<>();
-                /*LegoPiece piece = new LegoPiece(1,1,1,"adwadwa");
+                LegoPiece piece = new LegoPiece();
                 piecesSet.add(piece);
-                tsv.split("/n");
-                tsv.split("/t");*/
+
+
 
 
             }
