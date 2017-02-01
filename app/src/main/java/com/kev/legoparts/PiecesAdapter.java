@@ -1,6 +1,7 @@
 package com.kev.legoparts;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -63,8 +65,8 @@ public class PiecesAdapter extends BaseAdapter {
         ViewHolder holder = (ViewHolder) myView.getTag();
 
         LegoPiece legoPiece = legoSet.get(position);
-        int image = legoPiece.getImage();
-        holder.ivImage.setImageResource(image);
+        Uri image = legoPiece.getImage();
+        holder.ivImage.setImageURI(image);
         String name = legoPiece.getName();
         holder.tvName.setText(name);
         int quantity = legoPiece.getQuantity();

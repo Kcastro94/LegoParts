@@ -2,6 +2,7 @@ package com.kev.legoparts;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Spinner;
@@ -53,10 +54,11 @@ public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
     protected Boolean doInBackground(String... params) {
         int count;
 
-        String setId = params[0];
+        String setId;
+        setId = "0014-1";
 
         try{
-            URL url = new URL("http://stucom.flx.cat/lego/get_set_parts.php?key="+setId);
+            URL url = new URL("http://stucom.flx.cat/lego/get_set_parts.php?key=Pi2K3OzsDV&set="+setId);
 
             URLConnection connection = url.openConnection();
             connection.connect();
@@ -76,9 +78,16 @@ public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
             output.flush();
             String tsv = new String(output.toByteArray());
             String[] aux = tsv.split("\n");
-            for(int i = 0; i < tsv.length(); i++){
+            List<LegoPiece> piecesSet = new ArrayList<>();
+            for(int i = 0; i < aux.length; i++){
 
-                List<LegoPiece> piecesSet = new ArrayList<>();
+
+                Log.d("kev", aux[i]);
+
+                String [] name;
+                name = aux[i].split("\t");
+                Uri image;
+                int quantity;
                 LegoPiece piece = new LegoPiece();
                 piecesSet.add(piece);
 

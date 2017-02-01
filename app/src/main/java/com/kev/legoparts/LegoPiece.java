@@ -1,40 +1,42 @@
 package com.kev.legoparts;
 
+import android.net.Uri;
+
+import java.net.URL;
+
 /**
  * Created by DAM on 23/1/17.
  */
 
 public class LegoPiece {
-    private long setId;
-    private long pieceId;
+    private long id;
     private String name;
-    private int image;
+    private Uri image;
     private int quantity;
 
     public LegoPiece(){}
 
-    public LegoPiece(long setId, long pieceId, String name, int image, int quantity) {
-        this.setId = setId;
-        this.pieceId = pieceId;
+    public LegoPiece(long id, String name, Uri image, int quantity) {
+        this.id = id;
         this.name = name;
         this.image = image;
         this.quantity = quantity;
     }
 
-    public long getSetId() {
-        return setId;
+    public long getId() {
+        return id;
     }
 
-    public void setSetId(long setId) {
-        this.setId = setId;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public long getPieceId() {
-        return pieceId;
+    public Uri getImage() {
+        return image;
     }
 
-    public void setPieceId(long pieceId) {
-        this.pieceId = pieceId;
+    public void setImage(Uri image) {
+        this.image = image;
     }
 
     public String getName() {
@@ -45,13 +47,6 @@ public class LegoPiece {
         this.name = name;
     }
 
-    public int getImage() {
-        return image;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
-    }
 
     public int getQuantity() {
         return quantity;
