@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.Spinner;
 
 import java.io.BufferedInputStream;
@@ -25,13 +26,12 @@ import java.util.regex.Pattern;
 
 public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
 
+    private List<LegoPiece> piecesSet = new ArrayList<>();
     private Context context;
-    public PiecesDownloader(Context context) {
+    private ListView listView;
+    public PiecesDownloader(Context context, ListView listView) {
         this.context = context;
-    }
-    private OnPiecesLoadedListener listener = null;
-    public void setOnPiecesLoadedListener(OnPiecesLoadedListener listener) {
-        this.listener = listener;
+        this.listView = listView;
     }
 
     private ProgressDialog pDialog;
@@ -53,12 +53,8 @@ public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
     @Override
     protected Boolean doInBackground(String... params) {
         int count;
-
-        String setId;
-        setId = "0014-1";
-
         try{
-            URL url = new URL("http://stucom.flx.cat/lego/get_set_parts.php?key=Pi2K3OzsDV&set="+setId);
+            URL url = new URL("http://stucom.flx.cat/lego/get_set_parts.php?key=Pi2K3OzsDV&set="+params[0]);
 
             URLConnection connection = url.openConnection();
             connection.connect();
@@ -78,25 +74,23 @@ public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
             output.flush();
             String tsv = new String(output.toByteArray());
             String[] aux = tsv.split("\n");
-            List<LegoPiece> piecesSet = new ArrayList<>();
-            for(int i = 0; i < aux.length; i++){
-
-
+            Log.d("kev", ""+aux.length);
+            for(int i = 1; i < aux.length; i++){
                 Log.d("kev", aux[i]);
+                String[] auxDetail = aux[i].split("\t");
 
-                String [] name;
-                name = aux[i].split("\t");
-                Uri image;
-                int quantity;
-                LegoPiece piece = new LegoPiece();
+                long id = i;
+                String piece_id = auxDetail[0];
+                //long id = Long.parseLong(auxDetail[0]);
+                int quantity = Integer.parseInt(auxDetail[2]);
+                String name = auxDetail[4];
+                Uri image = Uri.parse(auxDetail[7]);
+                LegoPiece piece = new LegoPiece(id, piece_id, name, image, quantity);
                 piecesSet.add(piece);
-
-
-
-
+                Log.d("kev","Piece"+piece);
             }
 
-
+            Log.d("kev", "List"+piecesSet);
 
 
         }catch (Exception e) {
@@ -113,6 +107,8 @@ public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
 
     @Override public void onPostExecute(Boolean result) {
         pDialog.dismiss();
-        if (listener != null) listener.onPiecesLoaded(result);
+        //mirar context y como estoy mostrando los datosq
+        PiecesAdapter adapter = new PiecesAdapter(context, piecesSet);
+        listView.setAdapter(adapter);
     }
 }
