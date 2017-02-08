@@ -1,24 +1,23 @@
 package com.kev.legoparts;
 
+
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ListView;
-import android.widget.Spinner;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 /**
  * Created by DAM on 26/1/17.
@@ -81,11 +80,20 @@ public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
 
                 long id = i;
                 String piece_id = auxDetail[0];
-                //long id = Long.parseLong(auxDetail[0]);
                 int quantity = Integer.parseInt(auxDetail[2]);
                 String name = auxDetail[4];
-                Uri image = Uri.parse(auxDetail[7]);
-                LegoPiece piece = new LegoPiece(id, piece_id, name, image, quantity);
+                //Uri image = Uri.parse(auxDetail[6]);
+                String image = auxDetail[6];
+                Bitmap imageBit = null;
+                try ( InputStream is = new URL(image).openStream() ) {
+                    imageBit = BitmapFactory.decodeStream( is );
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                LegoPiece piece = new LegoPiece(id, piece_id, name, imageBit, quantity);
                 piecesSet.add(piece);
                 Log.d("kev","Piece"+piece);
             }
@@ -107,7 +115,7 @@ public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
 
     @Override public void onPostExecute(Boolean result) {
         pDialog.dismiss();
-        //mirar context y como estoy mostrando los datosq
+
         PiecesAdapter adapter = new PiecesAdapter(context, piecesSet);
         listView.setAdapter(adapter);
     }

@@ -1,8 +1,7 @@
 package com.kev.legoparts;
 
-import android.net.Uri;
+import android.graphics.Bitmap;
 
-import java.net.URL;
 
 /**
  * Created by DAM on 23/1/17.
@@ -12,17 +11,17 @@ public class LegoPiece {
     private long id;
     private String piece_id;
     private String name;
-    private Uri image;
+    private Bitmap image;
     private int quantity;
 
     public LegoPiece(){}
 
-    public LegoPiece(long id, String piece_id, String name, Uri image, int quantity) {
-        this.quantity = quantity;
+    public LegoPiece(long id, String piece_id, String name, Bitmap image, int quantity) {
         this.id = id;
         this.piece_id = piece_id;
         this.name = name;
         this.image = image;
+        this.quantity = quantity;
     }
 
     public long getId() {
@@ -41,11 +40,12 @@ public class LegoPiece {
         this.piece_id = piece_id;
     }
 
-    public Uri getImage() {
+
+    public Bitmap getImage() {
         return image;
     }
 
-    public void setImage(Uri image) {
+    public void setImage(Bitmap image) {
         this.image = image;
     }
 
