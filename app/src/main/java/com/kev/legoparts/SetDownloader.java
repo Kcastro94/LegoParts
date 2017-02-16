@@ -27,15 +27,19 @@ import java.util.List;
  * Created by DAM on 26/1/17.
  */
 
-public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
+public class SetDownloader extends AsyncTask<String, String, Boolean> {
 
-    private List<LegoPiece> piecesSet = new ArrayList<>();
+
+    private Bitmap imageBit;
+    private String descriptionSet;
+
     private Context context;
-    private ListView listView;
-    public PiecesDownloader(Context context, ListView listView) {
+    private ImageView imageView;
+    private TextView textView;
+    public SetDownloader(Context context, ImageView imageView, TextView textView) {
         this.context = context;
-        this.listView = listView;
-
+        this.imageView = imageView;
+        this.textView = textView;
     }
 
     private ProgressDialog pDialog;
@@ -59,7 +63,8 @@ public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
 
         int count;
         try{
-            URL url = new URL("http://stucom.flx.cat/lego/get_set_parts.php?key=Pi2K3OzsDV&set="+params[0]);
+            //No funciona per alguna cosa de la api
+            URL url = new URL("https://rebrickable.com/api/v3/lego/sets/"+params[0]+"/?key=Pi2K3OzsDV");
 
             URLConnection connection = url.openConnection();
             connection.connect();
@@ -74,44 +79,33 @@ public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
                 publishProgress("" + (int) ((total * 100) / lengthOfFile));
                 output.write(data, 0, count);
             }
-
             input.close();
             output.flush();
-            String tsv = new String(output.toByteArray());
-            String[] aux = tsv.split("\n");
-            Log.d("kev", ""+aux.length);
-            for(int i = 1; i < aux.length; i++){
-                Log.d("kev", aux[i]);
-                String[] auxDetail = aux[i].split("\t");
+            String csv = new String(output.toByteArray());
+            String[] aux = csv.split(",");
 
-                long id = i;
-                String piece_id = auxDetail[0];
-                int quantity = Integer.parseInt(auxDetail[1]);
-                String name = auxDetail[4];
-                String image = auxDetail[6];
-                Bitmap imageBit = null;
-                try ( InputStream is = new URL(image).openStream() ) {
-                    imageBit = BitmapFactory.decodeStream( is );
+            List<String> list = new ArrayList<>();
 
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                LegoPiece piece = new LegoPiece(id, piece_id, name, imageBit, quantity);
-                piecesSet.add(piece);
-                Log.d("kev","Piece"+piece);
+            for(int i=0; i<aux.length-3; i++){
+                descriptionSet = "\n"+descriptionSet.concat(aux[i]);
             }
 
-            Log.d("kev", "List"+piecesSet);
+            try ( InputStream is = new URL(aux[6]).openStream() ) {
+                imageBit = BitmapFactory.decodeStream( is );
 
-
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }catch (Exception e) {
             Log.e("Error: ", e.getMessage());
             return false;
+
         }
 
         return true;
+
     }
 
     protected void onProgressUpdate(String... progress) {
@@ -121,9 +115,7 @@ public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
     @Override public void onPostExecute(Boolean result) {
         pDialog.dismiss();
 
-        PiecesAdapter adapter = new PiecesAdapter(context, piecesSet);
-        listView.setAdapter(adapter);
+        imageView.setImageBitmap(imageBit);
+        textView.setText(descriptionSet);
     }
-
-
 }

@@ -3,6 +3,7 @@ package com.kev.legoparts;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
@@ -10,6 +11,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.BufferedInputStream;
@@ -20,21 +24,24 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
  * Created by DAM on 26/1/17.
  */
 
-public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
+public class SetsDownloader extends AsyncTask<String, String, Boolean> {
 
-    private List<LegoPiece> piecesSet = new ArrayList<>();
     private Context context;
-    private ListView listView;
-    public PiecesDownloader(Context context, ListView listView) {
+    private Spinner listSpinner;
+    private List<String> list;
+
+    public SetsDownloader(Context context, Spinner listSpinner) {
         this.context = context;
-        this.listView = listView;
+        this.listSpinner = listSpinner;
 
     }
 
@@ -59,7 +66,8 @@ public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
 
         int count;
         try{
-            URL url = new URL("http://stucom.flx.cat/lego/get_set_parts.php?key=Pi2K3OzsDV&set="+params[0]);
+
+            URL url = new URL("http://stucom.flx.cat/lego/search.php?query=&key=Pi2K3OzsDV");
 
             URLConnection connection = url.openConnection();
             connection.connect();
@@ -74,44 +82,27 @@ public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
                 publishProgress("" + (int) ((total * 100) / lengthOfFile));
                 output.write(data, 0, count);
             }
-
             input.close();
             output.flush();
             String tsv = new String(output.toByteArray());
             String[] aux = tsv.split("\n");
-            Log.d("kev", ""+aux.length);
-            for(int i = 1; i < aux.length; i++){
-                Log.d("kev", aux[i]);
+
+            Map<String, String> set = new HashMap();
+            for(int i=1; i<aux.length; i++){
                 String[] auxDetail = aux[i].split("\t");
-
-                long id = i;
-                String piece_id = auxDetail[0];
-                int quantity = Integer.parseInt(auxDetail[1]);
-                String name = auxDetail[4];
-                String image = auxDetail[6];
-                Bitmap imageBit = null;
-                try ( InputStream is = new URL(image).openStream() ) {
-                    imageBit = BitmapFactory.decodeStream( is );
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                LegoPiece piece = new LegoPiece(id, piece_id, name, imageBit, quantity);
-                piecesSet.add(piece);
-                Log.d("kev","Piece"+piece);
+                list.add(auxDetail[0]);
             }
 
-            Log.d("kev", "List"+piecesSet);
 
 
         }catch (Exception e) {
             Log.e("Error: ", e.getMessage());
             return false;
+
         }
 
         return true;
+
     }
 
     protected void onProgressUpdate(String... progress) {
@@ -121,9 +112,6 @@ public class PiecesDownloader extends AsyncTask<String, String, Boolean> {
     @Override public void onPostExecute(Boolean result) {
         pDialog.dismiss();
 
-        PiecesAdapter adapter = new PiecesAdapter(context, piecesSet);
-        listView.setAdapter(adapter);
+
     }
-
-
 }

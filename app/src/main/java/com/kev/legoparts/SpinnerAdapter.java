@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 
@@ -18,35 +19,34 @@ import java.util.List;
  * Created by DAM on 26/1/17.
  */
 
-public class PiecesAdapter extends BaseAdapter {
+public class SpinnerAdapter extends BaseAdapter {
 
     private Context context;
-    private List<LegoPiece> legoSet;
+    private List<String> list;
 
-    public PiecesAdapter(Context context, List<LegoPiece> legoSet) {
+    public SpinnerAdapter(Context context, List<String> list) {
         this.context = context;
-        this.legoSet = legoSet;
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return legoSet.size();
+        return list.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return legoSet.get(position);
+        return list.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return legoSet.get(position).getId();
+        return list.get();
     }
 
     public class ViewHolder {
-        public ImageView ivImage;
-        public TextView tvName;
-        public TextView tvQuantity;
+        public TextView textSp;
+
     }
 
     @Override
@@ -57,21 +57,16 @@ public class PiecesAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             myView = inflater.inflate(R.layout.list_pieces, parent, false);
             ViewHolder holder = new ViewHolder();
-            holder.ivImage = (ImageView) myView.findViewById(R.id.image);
-            holder.tvName = (TextView) myView.findViewById(R.id.name);
-            holder.tvQuantity = (TextView) myView.findViewById(R.id.quantity);
+            holder.textSp = (TextView) myView.findViewById(R.id.textSp);
             myView.setTag(holder);
         }
 
         ViewHolder holder = (ViewHolder) myView.getTag();
 
-        LegoPiece legoPiece = legoSet.get(position);
-        Bitmap image = legoPiece.getImage();
-        holder.ivImage.setImageBitmap(image);
-        String name = legoPiece.getName();
-        holder.tvName.setText(name);
-        String quantity = String.valueOf(legoPiece.getQuantity());
-        holder.tvQuantity.setText(quantity);
+        String setId = list.get(position);
+
+        holder.textSp.setText(setId);
+
 
         return myView;
     }
