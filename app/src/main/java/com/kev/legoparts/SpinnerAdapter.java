@@ -41,7 +41,8 @@ public class SpinnerAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return list.get();
+        long id = position;
+        return id;
     }
 
     public class ViewHolder {
@@ -55,7 +56,7 @@ public class SpinnerAdapter extends BaseAdapter {
         View myView = convertView;
         if(myView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            myView = inflater.inflate(R.layout.list_pieces, parent, false);
+            myView = inflater.inflate(R.layout.list_spinner, parent, false);
             ViewHolder holder = new ViewHolder();
             holder.textSp = (TextView) myView.findViewById(R.id.textSp);
             myView.setTag(holder);

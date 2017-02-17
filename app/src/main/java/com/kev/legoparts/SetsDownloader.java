@@ -37,7 +37,7 @@ public class SetsDownloader extends AsyncTask<String, String, Boolean> {
 
     private Context context;
     private Spinner listSpinner;
-    private List<String> list;
+    private List<String> list = new ArrayList<>();;
 
     public SetsDownloader(Context context, Spinner listSpinner) {
         this.context = context;
@@ -87,10 +87,11 @@ public class SetsDownloader extends AsyncTask<String, String, Boolean> {
             String tsv = new String(output.toByteArray());
             String[] aux = tsv.split("\n");
 
-            Map<String, String> set = new HashMap();
             for(int i=1; i<aux.length; i++){
                 String[] auxDetail = aux[i].split("\t");
                 list.add(auxDetail[0]);
+
+                Log.d("kev", "List sets: "+list);
             }
 
 
@@ -111,6 +112,8 @@ public class SetsDownloader extends AsyncTask<String, String, Boolean> {
 
     @Override public void onPostExecute(Boolean result) {
         pDialog.dismiss();
+        SpinnerAdapter adapter = new SpinnerAdapter(context, list);
+        listSpinner.setAdapter(adapter);
 
 
     }
